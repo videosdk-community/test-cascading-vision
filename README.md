@@ -49,6 +49,7 @@ OPENAI_API_KEY=your_openai_api_key
 ELEVENLABS_API_KEY=your_elevenlabs_api_key
 DEEPGRAM_API_KEY=your_deepgram_api_key
 VIDEOSDK_AUTH_TOKEN=your_videosdk_token
+ROOM_ID=your_room_id
 ```
 
 ## Usage
@@ -79,6 +80,17 @@ python3 main.py
 5. Open the provided playground URL in your browser
 
 6. Join the room and start talking to the agent!
+
+## Generate A Room ID
+
+Use your `VIDEOSDK_AUTH_TOKEN` to create a room via REST. Example with curl:
+
+```bash
+curl -X POST https://api.videosdk.live/v2/rooms \
+  -H "Authorization: YOUR_VIDEOSDK_AUTH_TOKEN" \
+  -H "Content-Type: application/json"
+```
+For more details on the Create Room API, refer to the [VideoSDK documentation](https://docs.videosdk.live/api-reference/realtime-communication/create-room).
 
 ## How It Works
 
@@ -126,6 +138,17 @@ room_options = RoomOptions(
     room_id="your-room-id",
     name="Image Analysis Agent", 
     playground=True  # Enables web interface
+)
+```
+
+Or read from environment variables (recommended):
+```python
+import os
+
+room_options = RoomOptions(
+    room_id=os.getenv("ROOM_ID"),
+    name="Image Analysis Agent",
+    playground=True
 )
 ```
 
