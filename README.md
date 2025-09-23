@@ -1,6 +1,6 @@
 # Image Analysis Agent
 
-A voice-enabled AI agent built with VideoSDK that can analyze images and answer questions about them through real-time voice conversation.
+A voice-enabled AI agent built with VideoSDK that can analyze images and answer questions about them through real-time voice conversation via cascading pipeline and ImageContent Class.
 
 ## Features
 
