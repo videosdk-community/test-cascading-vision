@@ -130,7 +130,7 @@ async def start_image_analysis_session(ctx: JobContext):
     
 def make_context():    
     room_options = RoomOptions(
-        room_id="eddq-bfbp-v3t1",
+        room_id="your-room-id",
         name="Image Analysis Agent", 
         playground=True
     )
