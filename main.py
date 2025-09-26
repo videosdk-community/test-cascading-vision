@@ -1,5 +1,4 @@
 import asyncio  
-import os  
 from videosdk.agents import Agent, AgentSession, CascadingPipeline, function_tool    
 from videosdk.agents import ChatRole, ImageContent, JobContext, RoomOptions, WorkerJob, ConversationFlow    
 from videosdk.plugins.openai import OpenAILLM
@@ -28,7 +27,6 @@ class DocumentAnalysisAgent(Agent):
             tools=[self.analyze_document]
         )  
           
-        # Convert local file to data URI  
         self.test_images = [    
             self._convert_file_to_data_uri("pan-sample.jpeg")  
         ]  
@@ -39,15 +37,12 @@ class DocumentAnalysisAgent(Agent):
             with open(file_path, 'rb') as file:  
                 file_data = file.read()  
               
-            # Get MIME type  
             mime_type, _ = mimetypes.guess_type(file_path)  
             if mime_type is None:  
-                mime_type = 'image/jpeg'  # Default for images  
+                mime_type = 'image/jpeg'   
               
-            # Encode to base64  
             base64_data = base64.b64encode(file_data).decode('utf-8')  
               
-            # Create data URI  
             return f"data:{mime_type};base64,{base64_data}"  
         except FileNotFoundError:  
             print(f"Error: File {file_path} not found")  
@@ -73,8 +68,7 @@ class DocumentAnalysisAgent(Agent):
           
         for i, image_url in enumerate(self.test_images):    
               
-              
-            # Add image with analysis request directly to chat context  
+               
             await self.analyze_document(image_url)
             await self.session.say(f"Analyzing image {i+1}...")  
 
@@ -88,11 +82,10 @@ async def start_image_analysis_session(ctx: JobContext):
     agent = DocumentAnalysisAgent()
     conversation_flow = ConversationFlow(agent)
     
-    # Configure components for cascading pipeline  
     logger.info("Setting up pipeline components")
     pipeline = CascadingPipeline(  
         stt=DeepgramSTT(),
-        llm=OpenAILLM(model="gpt-4o"),  # Updated model with vision support  
+        llm=OpenAILLM(model="gpt-4o"), 
         tts=ElevenLabsTTS(),
         vad=SileroVAD(),
         turn_detector=TurnDetector()
@@ -119,7 +112,7 @@ async def start_image_analysis_session(ctx: JobContext):
         logger.info("Starting agent session")
         await session.start()  
         logger.info("Agent session started, waiting for events")
-        # Keep running until interrupted  
+
         await asyncio.Event().wait()  
     except KeyboardInterrupt:  
         print("\nShutting down gracefully...")  
