@@ -3,6 +3,7 @@ videosdk-plugins-openai
 videosdk-plugins-deepgram
 videosdk-plugins-elevenlabs
 videosdk-plugins-silero
+videosdk-plugins-turn-detector
 openai
 python-dotenv
 aiohttp

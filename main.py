@@ -2,7 +2,7 @@ import asyncio
 import os  
 from videosdk.agents import Agent, AgentSession, CascadingPipeline, function_tool    
 from videosdk.agents import ChatRole, ImageContent, JobContext, RoomOptions, WorkerJob, ConversationFlow    
-from videosdk.plugins.openai import OpenAILLM, OpenAISTT, OpenAITTS  
+from videosdk.plugins.openai import OpenAILLM
 from videosdk.plugins.deepgram import DeepgramSTT
 from videosdk.plugins.silero import SileroVAD
 from videosdk.plugins.turn_detector import TurnDetector
@@ -63,30 +63,21 @@ class DocumentAnalysisAgent(Agent):
             role=ChatRole.USER,    
             content=[ImageContent(    
                 image=image_url,    
-                inference_detail="high"    
+                inference_detail="auto"    
             )]    
         )    
         return f"Document analysis added for: {image_url}"  
     
     async def on_enter(self):        
-        await self.session.say("Hello! I'm analyzing the given image...")  
+        await self.session.say("Hello there! I'm an agent that can analyze images and answer questions about them.")  
           
         for i, image_url in enumerate(self.test_images):    
-            await self.session.say(f"Analyzing image {i+1}...")    
+              
               
             # Add image with analysis request directly to chat context  
-            self.chat_context.add_message(        
-                role=ChatRole.USER,        
-                content=[    
-                    "Please analyze this image in detail. Tell me what information you can see, including any text content, personal details, and document structure:",  
-                    ImageContent(        
-                        image=image_url,        
-                        inference_detail="high"        
-                    )    
-                ]        
-            )  
-              
-            await self.session.say("Image added for analysis. You can now ask me questions about it!")
+            await self.analyze_document(image_url)
+            await self.session.say(f"Analyzing image {i+1}...")  
+
         
         await self.session.say("I've analyzed the given image. You can now ask me questions about what you see in the image, the text content, or any details visible in the image!")
     async def on_exit(self):  
@@ -139,8 +130,7 @@ async def start_image_analysis_session(ctx: JobContext):
     
 def make_context():    
     room_options = RoomOptions(
-        room_id="your-room-id",
-        # room_id="eddq-bfbp-v3t1", 
+        room_id="eddq-bfbp-v3t1",
         name="Image Analysis Agent", 
         playground=True
     )
